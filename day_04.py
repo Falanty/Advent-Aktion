@@ -13,9 +13,7 @@ def check_double(password, only_doubles):
             number_count = 1
         else:
             number_count += 1
-    if not only_doubles and number_count >= 2 or only_doubles and number_count == 2:
-        return True
-    return False
+    return not only_doubles and number_count >= 2 or only_doubles and number_count == 2
 
 
 def count_password_possibilities(password_range, only_doubles):

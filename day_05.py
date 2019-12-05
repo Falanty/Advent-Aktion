@@ -1,6 +1,9 @@
 class Iterator:
+    def __init__(self, start):
+        self.start = start
+
     def __iter__(self):
-        self.i = 0
+        self.i = self.start
         return self
 
     def __next__(self):
@@ -28,12 +31,14 @@ def get_parameter(mode, program, pc):
     return program[program[next(pc)]] if mode == 0 else program[next(pc)]
 
 
+def do_jump(is_jump, mode, program, pc):
+    if is_jump:
+        return iter(Iterator(get_parameter(mode, program, pc)))
+    return iter(Iterator(next(pc)+1))
+
+
 def computer(program):
-    """
-    >>> computer([1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50])
-    [3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]
-    """
-    pc = iter(Iterator())
+    pc = iter(Iterator(0))
     for _ in range(len(program)):
         inst = parse_instruction(program[next(pc)])
         if inst[0] == 1:
@@ -46,17 +51,27 @@ def computer(program):
             number = int(input("input> "))
             program[program[next(pc)]] = number
         elif inst[0] == 4:
-            print(program[program[next(pc)]])
+            print(get_parameter(inst[1], program, pc))
+        elif inst[0] == 5:
+            pc = do_jump(get_parameter(inst[1], program, pc) != 0, inst[2], program, pc)
+        elif inst[0] == 6:
+            pc = do_jump(get_parameter(inst[1], program, pc) == 0, inst[2], program, pc)
+        elif inst[0] == 7:
+            result = get_parameter(inst[1], program, pc) < get_parameter(inst[2], program, pc)
+            program[program[next(pc)]] = 1 if result else 0
+        elif inst[0] == 8:
+            result = get_parameter(inst[1], program, pc) == get_parameter(inst[2], program, pc)
+            program[program[next(pc)]] = 1 if result else 0
         elif inst[0] == 99:
             return program
         else:
-            return repr(inst) + " program alert!"
+            print("error, opcode: " + str(inst))
 
 
-def execute(optional_reconstruct, filename="data/input_day_05.txt"):
+def execute(filename="data/input_day_05.txt"):
     with open(filename, 'r') as input_file:
         program = list(map(int, input_file.read().split(",")))
-        return optional_reconstruct(program, 19690720) if optional_reconstruct is not None else computer(program)
+        return computer(program)
 
 
-execute(None)
+execute()
