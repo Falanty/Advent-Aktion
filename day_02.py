@@ -1,23 +1,28 @@
-import numpy as np
+class Iterator:
+    def __iter__(self):
+        self.i = 0
+        return self
+
+    def __next__(self):
+        x = self.i
+        self.i += 1
+        return x
 
 
 def computer(program):
     """
-    TODO sehr unschön
-
     >>> computer([1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50])
     [3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]
     """
-    opcode_positions = np.arange(0, len(program), 4)
-    for int_pointer in opcode_positions:
-        opcode = program[int_pointer]
-        first_parameter_address = program[int_pointer + 1]
-        second_parameter_address = program[int_pointer + 2]
-        result_address = program[int_pointer + 3]
+    int_pointer = iter(Iterator())
+    for _ in range(len(program)):
+        opcode = program[next(int_pointer)]
         if opcode == 1:
-            program[result_address] = program[first_parameter_address] + program[second_parameter_address]
+            result = program[program[next(int_pointer)]] + program[program[next(int_pointer)]]
+            program[program[next(int_pointer)]] = result
         elif opcode == 2:
-            program[result_address] = program[first_parameter_address] * program[second_parameter_address]
+            result = program[program[next(int_pointer)]] * program[program[next(int_pointer)]]
+            program[program[next(int_pointer)]] = result
         elif opcode == 99:
             return program
         else:
