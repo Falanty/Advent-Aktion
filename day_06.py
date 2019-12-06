@@ -1,4 +1,4 @@
-class Planet:
+class Orb:
     def __init__(self, name, parent):
         self.name = name
         self.parent = parent
@@ -24,36 +24,36 @@ def parse_map_data(filename="data/input_day_06.txt"):
     return map_data
 
 
-def find_planet_in_system(planet_name, system):
-    if planet_name == system.name:
+def find_orbital_in_system(orb_name, system):
+    if orb_name == system.name:
         return system
     if not system.children:
         return None
-    for planet in system.children:
-        planet_found = find_planet_in_system(planet_name, planet)
-        if planet_found is not None:
-            return planet_found
+    for orbital in system.children:
+        orbital_found = find_orbital_in_system(orb_name, orbital)
+        if orbital_found is not None:
+            return orbital_found
     return None
 
 
-def insert_planet_relation(parent_name, orbital_name, system):
-    parent_in_system = find_planet_in_system(parent_name, system)
-    orbital_in_system = find_planet_in_system(orbital_name, system)
+def insert_orbital_relation(parent_name, orbital_name, system):
+    parent_in_system = find_orbital_in_system(parent_name, system)
+    orbital_in_system = find_orbital_in_system(orbital_name, system)
     if parent_in_system is None:
-        parent_in_system = Planet(parent_name, system)
+        parent_in_system = Orb(parent_name, system)
         system.children.append(parent_in_system)
     if orbital_in_system is not None:
         orbital_in_system.set_parent(parent_in_system)
     else:
-        parent_in_system.children.append(Planet(orbital_name, parent_in_system))
+        parent_in_system.children.append(Orb(orbital_name, parent_in_system))
 
 
 def build_solar_system(map_data):
-    com = Planet("COM", None)
+    com = Orb("COM", None)
     for parent, orbital in map_data:
         if parent == "COM":
             continue
-        insert_planet_relation(parent, orbital, com)
+        insert_orbital_relation(parent, orbital, com)
     return com
 
 
@@ -85,4 +85,4 @@ def calculate_orbital_transfers_down(start_orbital, end_orbital, transfers_down)
 
 universe = build_solar_system(parse_map_data())
 print(sum(get_orbital_distances(universe, [])))
-print(calculate_orbital_transfers(find_planet_in_system("YOU", universe), find_planet_in_system("SAN", universe), 0))
+print(calculate_orbital_transfers(find_orbital_in_system("YOU", universe), find_orbital_in_system("SAN", universe), 0))
