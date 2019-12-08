@@ -2,7 +2,11 @@ from util.Iterator import LoopingIterator as Iterator
 from util.IntComputer import Computer
 
 
-def generate_phase_settings(result, possible_digits, digits):
+def generate_phase_settings(possible_digits, result=None, digits=None):
+    if digits is None:
+        digits = list()
+    if result is None:
+        result = list()
     if len(possible_digits) == 2:
         result.append(digits + [possible_digits[0], possible_digits[1]])
         result.append(digits + [possible_digits[1], possible_digits[0]])
@@ -12,7 +16,7 @@ def generate_phase_settings(result, possible_digits, digits):
         for digit in possible_digits:
             remaining_digits.remove(digit)
             digits.append(digit)
-            generate_phase_settings(result, remaining_digits, digits)
+            generate_phase_settings(remaining_digits, result, digits)
             remaining_digits.append(digit)
             digits.remove(digit)
         return result
@@ -39,7 +43,7 @@ def execute(phase_settings, feedback_mode, filename="data/input_day_07.txt"):
 
 def find_phase_settings(phase_range, feedback_mode):
     best_result = 0, None
-    phase_settings = generate_phase_settings(list(), phase_range, list())
+    phase_settings = generate_phase_settings(phase_range)
     for phase_setting in phase_settings:
         result = execute(phase_setting, feedback_mode)
         if result > best_result[0]:
