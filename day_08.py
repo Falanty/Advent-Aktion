@@ -15,14 +15,9 @@ class Image:
         return layers
 
     def check_corruption(self):
-        layer = None
-        most_non_zeroes = -1
-        for index in range(len(self.layers)):
-            non_zero_count = np.count_nonzero(self.layers[index])
-            if non_zero_count > most_non_zeroes:
-                most_non_zeroes = non_zero_count
-                layer = self.layers[index]
-        return len(layer[layer == 1]) * len(layer[layer == 2])
+        index_to_non_zero_count = {index: np.count_nonzero(layer) for index, layer in enumerate(self.layers)}
+        layer_fewest_zero = self.layers[max(index_to_non_zero_count.keys(), key=(lambda k: index_to_non_zero_count[k]))]
+        return len(layer_fewest_zero[layer_fewest_zero == 1]) * len(layer_fewest_zero[layer_fewest_zero == 2])
 
     def decode_message(self):
         non_transparent = np.transpose(np.where(self.layers != 2))
