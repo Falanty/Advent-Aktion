@@ -19,7 +19,7 @@ class Image:
         layer_fewest_zero = self.layers[max(index_to_non_zero_count.keys(), key=(lambda k: index_to_non_zero_count[k]))]
         return len(layer_fewest_zero[layer_fewest_zero == 1]) * len(layer_fewest_zero[layer_fewest_zero == 2])
 
-    def decode_message(self):
+    def print(self):
         non_transparent = np.transpose(np.where(self.layers != 2))
         result = list()
         for x in range(self.height):
@@ -30,13 +30,12 @@ class Image:
                 result.append(background + str(color) + "\u001B[0m")
             result.append("\n")
         print(''.join(result))
-        return result
 
 
 test = Image(2, 2, filename="data/test_day_08.txt")
 print(test.check_corruption())
-test.decode_message()
+test.print()
 
 image = Image(25, 6)
 print(image.check_corruption())
-image.decode_message()
+image.print()
