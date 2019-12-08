@@ -1,15 +1,4 @@
-class Iterator:
-    def __init__(self, start):
-        self.start = start
-
-    def __iter__(self):
-        self.i = self.start
-        return self
-
-    def __next__(self):
-        x = self.i
-        self.i += 1
-        return x
+from util.Iterator import SimpleIterator as Iterator
 
 
 def parse_instruction(instruction):
