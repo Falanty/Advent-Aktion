@@ -64,15 +64,15 @@ def get_orbital_distances(system, distances):
     return distances
 
 
-def calculate_orbital_transfers(start_orbital, end_orbital, transfers_up):
-    found_target, transfers = calculate_orbital_transfers_down(start_orbital.parent, end_orbital, 0)
-    if found_target:
+def calculate_orbital_transfers(start_orbital, end_orbital, transfers_up=0):
+    target_found, transfers = calculate_orbital_transfers_down(start_orbital.parent, end_orbital)
+    if target_found:
         return transfers + transfers_up
     return calculate_orbital_transfers(start_orbital.parent, end_orbital, transfers_up + 1) \
         if start_orbital.parent else -1
 
 
-def calculate_orbital_transfers_down(start_orbital, end_orbital, transfers_down):
+def calculate_orbital_transfers_down(start_orbital, end_orbital, transfers_down=0):
     if end_orbital in start_orbital.children:
         return True, transfers_down
     elif start_orbital.children:
@@ -85,4 +85,4 @@ def calculate_orbital_transfers_down(start_orbital, end_orbital, transfers_down)
 
 universe = build_solar_system(parse_map_data())
 print(sum(get_orbital_distances(universe, [])))
-print(calculate_orbital_transfers(find_orbital_in_system("YOU", universe), find_orbital_in_system("SAN", universe), 0))
+print(calculate_orbital_transfers(find_orbital_in_system("YOU", universe), find_orbital_in_system("SAN", universe)))
