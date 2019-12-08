@@ -17,8 +17,9 @@ class LoopingIterator:
 
 
 class SimpleIterator:
-    def __init__(self, start):
+    def __init__(self, start, *step):
         self.start = start
+        self.step = step[0] if step else 1
 
     def __iter__(self):
         self.i = self.start
@@ -26,5 +27,5 @@ class SimpleIterator:
 
     def __next__(self):
         x = self.i
-        self.i += 1
+        self.i += self.step
         return x
