@@ -15,6 +15,7 @@ class Image:
         return layers
 
     def check_corruption(self):
+        layer_fewest_zero2 = self.layers[(self.layers != 0).sum(axis=1).argmax()]
         index_to_non_zero_count = {index: np.count_nonzero(layer) for index, layer in enumerate(self.layers)}
         layer_fewest_zero = self.layers[max(index_to_non_zero_count.keys(), key=(lambda k: index_to_non_zero_count[k]))]
         return len(layer_fewest_zero[layer_fewest_zero == 1]) * len(layer_fewest_zero[layer_fewest_zero == 2])

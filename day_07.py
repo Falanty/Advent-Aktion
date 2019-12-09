@@ -22,7 +22,7 @@ def generate_phase_settings(possible_digits, result=None, digits=None):
         return result
 
 
-def execute(phase_settings, feedback_mode, filename="data/input_day_07.txt"):
+def execute(phase_settings, feedback_mode=False, filename="data/input_day_07.txt"):
     with open(filename, 'r') as input_file:
         program = list(map(int, input_file.read().split(",")))
     result = 0
@@ -41,7 +41,7 @@ def execute(phase_settings, feedback_mode, filename="data/input_day_07.txt"):
     return result
 
 
-def find_phase_settings(phase_range, feedback_mode):
+def find_phase_settings(phase_range, feedback_mode=False):
     best_result = 0, None
     phase_settings = generate_phase_settings(phase_range)
     for phase_setting in phase_settings:
@@ -52,5 +52,5 @@ def find_phase_settings(phase_range, feedback_mode):
 
 
 print(execute([9, 7, 8, 5, 6], True, filename="data/test_day_07.txt"))
-print(find_phase_settings([i for i in range(5)], False))
+print(find_phase_settings([i for i in range(5)]))
 print(find_phase_settings([i for i in range(5, 10)], True))
